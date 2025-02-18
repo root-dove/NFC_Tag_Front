@@ -60,7 +60,6 @@ export default function AttendancePage() {
   const [viewMode, setViewMode] = useState<ViewMode>("week")
   const [isLoading, setIsLoading] = useState(true)
   const [showPenalties, setShowPenalties] = useState<{ [key: number]: boolean }>({})
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
   useEffect(() => {
     fetchEmployees()
@@ -164,9 +163,6 @@ export default function AttendancePage() {
         const data = await response.json()
         console.log("Server response:", data)
   
-        // 성공 메시지 설정
-        setSuccessMessage(data.message || "Attendance updated successfully")
-
         // Refresh attendance data
         fetchAttendanceData()
   
@@ -176,10 +172,6 @@ export default function AttendancePage() {
         setEditStatus("PRESENT")
         setEditTime("")
         setEditComment("")
-
-        // 3초 후 성공 메시지 제거
-        setTimeout(() => setSuccessMessage(null), 3000)
-
       } catch (error) {
         console.error("Error updating attendance:", error)
         alert(`Failed to update attendance: ${error}`)
@@ -235,14 +227,6 @@ export default function AttendancePage() {
     <ClientOnly>
       <div className="container mx-auto p-4">
         <h1 className="text-2xl font-bold mb-4">Employee Attendance</h1>
-        {successMessage && (
-          <div
-            className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4"
-            role="alert"
-          >
-            <span className="block sm:inline">{successMessage}</span>
-          </div>
-        )}
         <div className="flex space-x-4 mb-4">
           <Button variant={viewMode === "day" ? "default" : "outline"} onClick={() => handleViewModeChange("day")}>
             Today
